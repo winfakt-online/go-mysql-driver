@@ -70,8 +70,8 @@ func (stmt *mysqlStmt) Exec(args []driver.Value) (driver.Result, error) {
 	// Read Result
 	resLen, err := mc.readResultSetHeaderPacket()
 	if err != nil {
-		if mysqlErr, ok := err.(*MySQLError); ok && stmt.reprepared < stmt.mc.cfg.AutoReprepare &&
-			mysqlErr.Number == 1615 {
+		if mysqlErr, ok := err.(*MySQLError); ok && stmt.reprepared < stmt.mc.cfg.AutoReprepare && mysqlErr.Number == 1615 {
+			fmt.Println("MySQL Error 1615 occured. Repreparing statement and trying again.")
 			err = stmt.reprepare()
 			if err == nil {
 				return stmt.Exec(args)
